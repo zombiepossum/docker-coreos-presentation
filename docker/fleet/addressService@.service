@@ -1,0 +1,23 @@
+[Unit]
+Description=Address Service Container
+Requires=docker.service
+After=docker.service
+
+[Service]
+TimeoutStartSec=0
+KillMode=none
+User=core
+WorkingDirectory=/home/core
+EnvironmentFile=/etc/environment
+Restart=always
+RestartSec=10s
+StartLimitInterval=10
+ExecStartPre=-/usr/bin/docker kill ADDRESS_SERVICE
+ExecStartPre=-/usr/bin/docker rm ADDRESS_SERVICE
+ExecStartPre=-/usr/bin/docker pull jmuraski/node-express-endpoint
+ExecStart=/usr/bin/docker run  -rm -p 4000:4000 -e RANDOM_ENV_VAR="RandomEnvVar" --name ADDRESS_SERVICE jmuraski/node-express-endpoint
+ExecStop=-/usr/bin/docker stop ADDRESS_SERVICE
+
+[X-Fleet]
+Conflicts=addressService@*.service
+MachineMetadata=role=worker

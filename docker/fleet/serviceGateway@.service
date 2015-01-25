@@ -1,0 +1,23 @@
+[Unit]
+Description=Service Gateway
+Requires=docker.service
+After=docker.service
+
+[Service]
+TimeoutStartSec=0
+KillMode=none
+User=core
+WorkingDirectory=/home/core
+EnvironmentFile=/etc/environment
+Restart=always
+RestartSec=10s
+StartLimitInterval=10
+ExecStartPre=-/usr/bin/docker kill SERVICE_GATEWAY
+ExecStartPre=-/usr/bin/docker rm SERVICE_GATEWAY
+ExecStartPre=-/usr/bin/docker pull jmuraski/service-gateway-haproxy
+ExecStart=/usr/bin/docker run  --rm -p 80:80 --name SERVICE_GATEWAY -e HOST_IP=${COREOS_PUBLIC_IPV4} jmuraski/service-gateway-haproxy
+ExecStop=-/usr/bin/docker stop SERVICE_GATEWAY
+
+[X-Fleet]
+Conflicts=serviceGateway@*.service
+MachineMetadata=role=worker

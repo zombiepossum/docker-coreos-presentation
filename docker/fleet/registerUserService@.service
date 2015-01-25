@@ -1,0 +1,34 @@
+[Unit]
+Description=Register User Service
+
+# Requirements
+Requires=etcd.service
+Requires=userService@%i.service
+
+# Dependency ordering and binding
+After=etcd.service
+After=suerService@%i.service
+BindsTo=userService@%i.service
+
+[Service]
+TimeoutStartSec=0
+KillMode=none
+User=core
+WorkingDirectory=/home/core
+EnvironmentFile=/etc/environment
+Restart=always
+RestartSec=10s
+StartLimitInterval=10
+
+ExecStartPre=-/usr/bin/docker kill REGISTER_USER_SERVICE
+ExecStartPre=-/usr/bin/docker rm REGISTER_USER_SERVICE
+ExecStartPre=-/usr/bin/docker pull jmuraski/etcd_service_register
+ExecStart=/usr/bin/docker run --rm --name REGISTER_USER_SERVICE -e KEY_PATH=users \
+  -e INSTANCE_NAME=user -e INSTANCE_NUMBER=%i -e INSTANCE_IP=${COREOS_PRIVATE_IPV4} \
+  -e INSTANCE_PORT=8080 -e 'EXTRA_ARGS=maxconn 32' -e 'REWRITE_URL=false' \
+  -e 'HEALTH_CHECK=GET /health' jmuraski/etcd_service_register
+ExecStop=-/usr/bin/etcdctl rm /service/user/user%i
+ExecStop=-/usr/bin/docker stop REGISTER_USER_SERVICE
+
+[X-Fleet]
+MachineOf=userService@%i.service

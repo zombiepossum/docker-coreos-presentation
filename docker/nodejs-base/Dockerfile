@@ -2,7 +2,7 @@
 # Docker file for for base Debian Image
 #
 
-FROM jmuraski/debian-base:latest
+FROM jmuraski/jmuraski-base:latest
 MAINTAINER Joseph Muraski
 
 RUN apt-get update -y && \

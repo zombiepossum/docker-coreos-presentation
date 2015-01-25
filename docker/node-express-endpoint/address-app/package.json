@@ -1,0 +1,19 @@
+{
+  "name": "address-app",
+  "version": "0.0.1",
+  "description": "sample address app",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "env": "env"
+  },
+  "author": "Joe Muraski",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.10.1",
+    "express": "^4.11.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.2.1"
+  }
+}

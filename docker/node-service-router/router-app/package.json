@@ -1,0 +1,18 @@
+{
+  "name": "router-app",
+  "version": "0.0.1",
+  "description": "Application that routes to secondary services",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Joe Muraski",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.11.0",
+    "http-proxy": "^1.8.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.2.1"
+  }
+}

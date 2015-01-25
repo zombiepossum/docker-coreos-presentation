@@ -1,0 +1,23 @@
+[Unit]
+Description=User Service Container
+Requires=docker.service
+After=docker.service
+
+[Service]
+TimeoutStartSec=0
+KillMode=none
+User=core
+WorkingDirectory=/home/core
+EnvironmentFile=/etc/environment
+Restart=always
+RestartSec=10s
+StartLimitInterval=10
+ExecStartPre=-/usr/bin/docker kill USER_SERVICE
+ExecStartPre=-/usr/bin/docker rm USER_SERVICE
+ExecStartPre=-/usr/bin/docker pull jmuraski/spring-boot-endpoint
+ExecStart=/usr/bin/docker run  --rm -p 8080:8080 -e RANDOM_ENV_VAR="RandomEnvVar" --name USER_SERVICE jmuraski/spring-boot-endpoint
+ExecStop=-/usr/bin/docker stop USER_SERVICE
+
+[X-Fleet]
+Conflicts=userService@*.service
+MachineMetadata=role=worker
