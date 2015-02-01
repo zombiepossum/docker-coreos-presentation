@@ -3,7 +3,7 @@
 #
 
 # FROM ubuntu:latest
-FROM jmuraski/debian-base
+FROM jmuraski/jmuraski-base
 MAINTAINER Joseph Muraski
 
 

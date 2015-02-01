@@ -1,0 +1,30 @@
+[Unit]
+Description=API Gateway
+Requires=docker.service
+Requires=serviceGateway@%i.service
+
+After=docker.service
+After=serviceGateway@%i.service
+BindsTo=serviceGateway@%i.service
+
+
+[Service]
+TimeoutStartSec=0
+KillMode=none
+User=core
+WorkingDirectory=/home/core
+EnvironmentFile=/etc/environment
+Restart=always
+RestartSec=10s
+StartLimitInterval=10
+ExecStartPre=-/usr/bin/docker kill API_GATEWAY
+ExecStartPre=-/usr/bin/docker rm API_GATEWAY
+ExecStartPre=-/usr/bin/docker pull jmuraski/node-api-gateway
+ExecStart=/usr/bin/docker run  -rm -p 3000:3000 -e RANDOM_ENV_VAR="RandomEnvVar" \
+  --name API_GATEWAY --link SERVICE_GATEWAY:SERVICE_GATEWAY jmuraski/node-api-gateway
+ExecStop=-/usr/bin/docker stop API_GATEWAY
+
+[X-Fleet]
+Conflicts=apiGateway@*.service
+MachineOf=serviceGateway@%i.service
+MachineMetadata=role=worker

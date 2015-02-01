@@ -23,7 +23,7 @@ StartLimitInterval=10
 ExecStartPre=-/usr/bin/docker kill REGISTER_ADDRESS_SERVICE
 ExecStartPre=-/usr/bin/docker rm REGISTER_ADDRESS_SERVICE
 ExecStartPre=-/usr/bin/docker pull jmuraski/etcd_service_register
-ExecStart=/usr/bin/docker run --rm --name REGISTER_ADDRESS_SERVICE -e KEY_PATH=address \
+ExecStart=/usr/bin/docker run --rm --name REGISTER_ADDRESS_SERVICE -e KEY_ROOT=services -e KEY_PATH=address \
   -e INSTANCE_NAME=address -e INSTANCE_NUMBER=%i -e INSTANCE_IP=${COREOS_PRIVATE_IPV4} \
   -e INSTANCE_PORT=4000 -e 'EXTRA_ARGS=maxconn 32' -e 'REWRITE_URL=/address' jmuraski/etcd_service_register
 ExecStop=-/usr/bin/etcdctl rm /service/address/address%i

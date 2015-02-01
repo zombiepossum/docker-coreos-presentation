@@ -6,8 +6,8 @@ var http = require('http');
 app.set('port', process.env.PORT || 3000);
 
 
-var serviceGatewayAddress = process.env.SERVICE_GATEWAY_PORT_80_TCP_ADD || '172.17.8.105'
-var serviceGatewayPort = process.env.SERVICE_GATEWAY_PORT_TCP_PORT || "8080"
+var serviceGatewayAddress = process.env.SERVICE_GATEWAY_PORT_80_TCP_ADDR || '172.17.8.105'
+var serviceGatewayPort = process.env.SERVICE_GATEWAY_PORT_80_TCP_PORT || "8080"
 
 console.log("Service Gateway Address: " + serviceGatewayAddress)
 console.log("Service Gateway Port: " + serviceGatewayPort)
@@ -22,6 +22,7 @@ app.get('/addresses', function(req, res){
 
   var requestOptions = {
     host: serviceGatewayAddress,
+    path: "/address",
     //since we are listening on a custom port, we need to specify it by hand
     port: serviceGatewayPort,
     //This is what changes the request to a POST request
@@ -84,11 +85,6 @@ app.get('/combined', function(req, res){
   });
 });
 
-app.get('/yahoo', function(req, res){
-  console.log("Original URL: " + req.url);
-  req.url = req.url.replace(/yahoo/, '');
-  console.log("New URL: " + req.url);
-  proxy.web(req,res, {
-    target: 'http://localhost:4000'
-  });
+app.get('/', function(req, res){
+  res.json({msg: "hello world"});
 });

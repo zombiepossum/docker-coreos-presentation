@@ -23,7 +23,7 @@ StartLimitInterval=10
 ExecStartPre=-/usr/bin/docker kill REGISTER_USER_SERVICE
 ExecStartPre=-/usr/bin/docker rm REGISTER_USER_SERVICE
 ExecStartPre=-/usr/bin/docker pull jmuraski/etcd_service_register
-ExecStart=/usr/bin/docker run --rm --name REGISTER_USER_SERVICE -e KEY_PATH=users \
+ExecStart=/usr/bin/docker run --rm --name REGISTER_USER_SERVICE -e KEY_ROOT=services -e KEY_PATH=users \
   -e INSTANCE_NAME=user -e INSTANCE_NUMBER=%i -e INSTANCE_IP=${COREOS_PRIVATE_IPV4} \
   -e INSTANCE_PORT=8080 -e 'EXTRA_ARGS=maxconn 32' -e 'REWRITE_URL=false' \
   -e 'HEALTH_CHECK=GET /health' jmuraski/etcd_service_register

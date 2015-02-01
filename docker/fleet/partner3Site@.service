@@ -1,0 +1,23 @@
+[Unit]
+Description=Partner 3 Site Nginx Container
+Requires=docker.service
+After=docker.service
+
+[Service]
+TimeoutStartSec=0
+KillMode=none
+User=core
+WorkingDirectory=/home/core
+EnvironmentFile=/etc/environment
+Restart=always
+RestartSec=10s
+StartLimitInterval=10
+ExecStartPre=-/usr/bin/docker kill PARTNER_3_NGINX
+ExecStartPre=-/usr/bin/docker rm PARTNER_3_NGINX
+ExecStartPre=-/usr/bin/docker pull jmuraski/partner3-content
+ExecStart=/usr/bin/docker run  --rm -p 46080:80 --name PARTNER_3_NGINX jmuraski/partner3-content
+ExecStop=-/usr/bin/docker stop PARTNER_3_NGINX
+
+[X-Fleet]
+Conflicts=partner3Site@*.service
+MachineMetadata=role=worker

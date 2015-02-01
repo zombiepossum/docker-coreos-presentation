@@ -1,0 +1,24 @@
+[Unit]
+Description=Endpoint Proxy
+Requires=docker.service
+After=docker.service
+
+[Service]
+TimeoutStartSec=0
+KillMode=none
+User=core
+WorkingDirectory=/home/core
+EnvironmentFile=/etc/environment
+Restart=always
+RestartSec=10s
+StartLimitInterval=10
+ExecStartPre=-/usr/bin/docker kill ENDPOINT_PROXY
+ExecStartPre=-/usr/bin/docker rm ENDPOINT_PROXY
+ExecStartPre=-/usr/bin/docker pull jmuraski/endpoint-haproxy
+ExecStart=/usr/bin/docker run  --rm -p 80:80 --name ENDPOINT_PROXY -e HOST_IP=${COREOS_PUBLIC_IPV4} jmuraski/endpoint-haproxy
+ExecStop=-/usr/bin/docker stop ENDPOINT_PROXY
+
+[X-Fleet]
+Conflicts=serviceGateway@*.service
+Conflicts=endpointProxy@*.service
+MachineMetadata=role=worker

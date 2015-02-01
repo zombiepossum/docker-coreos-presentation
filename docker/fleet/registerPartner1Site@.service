@@ -1,0 +1,33 @@
+[Unit]
+Description=Register Partner 1 Site
+
+# Requirements
+Requires=etcd.service
+Requires=partner1Site@%i.service
+
+# Dependency ordering and binding
+After=etcd.service
+After=partner1Site@%i.service
+BindsTo=partner1Site@%i.service
+
+[Service]
+TimeoutStartSec=0
+KillMode=none
+User=core
+WorkingDirectory=/home/core
+EnvironmentFile=/etc/environment
+Restart=always
+RestartSec=10s
+StartLimitInterval=10
+
+ExecStartPre=-/usr/bin/docker kill REGISTER_PARTNER_1_SITE
+ExecStartPre=-/usr/bin/docker rm REGISTER_PARTNER_1_SITE
+ExecStartPre=-/usr/bin/docker pull jmuraski/etcd_service_register
+ExecStart=/usr/bin/docker run --rm --name REGISTER_PARTNER_1_SITE -e KEY_ROOT=endpoints -e KEY_PATH=partner1 \
+  -e INSTANCE_NAME=partner1site -e INSTANCE_NUMBER=%i -e INSTANCE_IP=${COREOS_PRIVATE_IPV4} \
+  -e INSTANCE_PORT=48080 -e 'EXTRA_ARGS=maxconn 32' -e 'REWRITE_URL=/partner1' jmuraski/etcd_service_register
+ExecStop=-/usr/bin/etcdctl rm /endpoints/partner1site/partner1site%i
+ExecStop=-/usr/bin/docker stop REGISTER_PARTNER_1_SITE
+
+[X-Fleet]
+MachineOf=partner1Site@%i.service

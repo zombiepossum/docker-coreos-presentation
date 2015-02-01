@@ -41,6 +41,6 @@ backend {{$dir}}
   option httpclose
   option forwardfor
   {{$custdir := printf "/endpoints/%s/*" $dir}}{{range  $count, $key := gets $custdir}}{{$data :=json .Value}}{{if eq $count 0}}balance {{$data.loadBalance}}{{end}}
-  {{if and (ne $data.rewriteUrl "false") (eq $count 0)}}reqrep ^([^\ ]*\ /){{$data.rewriteUrl}}?(.*)     \1\2{{end}}{{end}}
+  {{if and (ne $data.rewriteUrl "false") (eq $count 0)}}reqrep ^([^\ :]*)\ {{$data.rewriteUrl}}[/]?(.*)     \1\ /\2{{end}}{{end}}
   {{$custdir := printf "/endpoints/%s/*" $dir}}{{range  $count, $key := gets $custdir}}{{$data :=json .Value}}server {{base .Key}} {{$data.ip}}:{{$data.port}} {{if $data.extraArgs}}{{$data.extraArgs}}{{end}}
   {{end}}{{end}}

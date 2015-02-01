@@ -1,0 +1,2 @@
+partner1Site
+registerPartner1Site

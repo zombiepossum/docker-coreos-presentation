@@ -1,0 +1,23 @@
+[Unit]
+Description=Partner 2 Site Nginx Container
+Requires=docker.service
+After=docker.service
+
+[Service]
+TimeoutStartSec=0
+KillMode=none
+User=core
+WorkingDirectory=/home/core
+EnvironmentFile=/etc/environment
+Restart=always
+RestartSec=10s
+StartLimitInterval=10
+ExecStartPre=-/usr/bin/docker kill PARTNER_2_NGINX
+ExecStartPre=-/usr/bin/docker rm PARTNER_2_NGINX
+ExecStartPre=-/usr/bin/docker pull jmuraski/partner2-content
+ExecStart=/usr/bin/docker run  --rm -p 47080:80 --name PARTNER_2_NGINX jmuraski/partner2-content
+ExecStop=-/usr/bin/docker stop PARTNER_2_NGINX
+
+[X-Fleet]
+Conflicts=partner2Site@*.service
+MachineMetadata=role=worker

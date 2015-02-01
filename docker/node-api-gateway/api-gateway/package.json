@@ -1,5 +1,5 @@
 {
-  "name": "router-app",
+  "name": "api-gateway",
   "version": "0.0.1",
   "description": "Application that routes to secondary services",
   "main": "app.js",
@@ -9,8 +9,7 @@
   "author": "Joe Muraski",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.11.0",
-    "http-proxy": "^1.8.1"
+    "express": "^4.11.0"
   },
   "devDependencies": {
     "nodemon": "^1.2.1"
