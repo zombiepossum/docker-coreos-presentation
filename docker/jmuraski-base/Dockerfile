@@ -1,5 +1,5 @@
 #
-# Docker file for for base Debian Image
+# Docker file for for base Ubuntu Image
 #
 
 FROM ubuntu:14.04

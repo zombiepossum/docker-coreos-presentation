@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Microservices with Docker and CoreOS</title>
+
+		<meta name="description" content="How to use Docker and coreos to deploy and run microservices">
+		<meta name="author" content="Joseph Muraski">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/blood.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section data-markdown>
+					## Microservices with Docker and CoreOS
+
+					Created by Joe Muraski / [@jmuraski](http://twitter.com/jmuraski) / [My Profile](https://www.linkedin.com/in/jmuraski)
+				</section>
+
+				<section>
+				<h2>Who Am I</h2>
+				<ul>
+					<li class="fragment roll-in">Consultant</li>
+					<li class="fragment roll-in">Worked with Docker 10 months</li>
+					<li class="fragment roll-in">Created similar model for Previous Client</li>
+				</ul>
+				</section>
+
+				<section>
+				<h2>What are Microservices</h2>
+				<blockquote style="font-size: 20px">
+				is an approach to developing a single application as a suite of small services,
+				each running in its own process and communicating with lightweight mechanisms,
+				often an HTTP resource API. These services are built around business capabilities
+				and independently deployable by fully automated deployment machinery.
+				There is a bare minimum of centralized management of these services,
+				which may be written in different programming languages and use different
+				data storage technologies.
+				<footer> - <a href="http://martinfowler.com/articles/microservices.html">Martin Fowler</a> </footer>
+				</blockquote>
+				</section>
+
+				<section>
+				<h2>Microservice Requirements</h2>
+				<ul>
+					<li>Rapid Provisioning <a style="font-size: 15px" href="http://martinfowler.com/bliki/MicroservicePrerequisites.html">Microservices Prerequisites(Fowler)</a></li>
+					<li>Basic Monitoring <a style="font-size: 15px" href="http://martinfowler.com/bliki/MicroservicePrerequisites.html">Microservices Prerequisites(Fowler)</a></li>
+					<li>Rapid Deployment <a style="font-size: 15px" href="http://martinfowler.com/bliki/MicroservicePrerequisites.html">Microservices Prerequisites(Fowler)</a></li>
+					<li>Fault Tolerance</li>
+				</ul>
+
+				</section>
+
+				<section data-markdown>
+				## What I Will Address
+				- Fault Tolerance
+					- Service Discovery
+					- Load Balancing
+				- Rapid Deployment
+				</section>
+
+				<section data-markdown>
+				## Docker
+				>Docker is an open platform for developers and sysadmins to build, ship,
+				>and run distributed applications. Consisting of Docker Engine, a portable,
+				>lightweight runtime and packaging tool, and Docker Hub, a cloud service for
+				>sharing applications and automating workflows, Docker enables apps to be quickly
+				>assembled from components and eliminates the friction between development, QA, and production environments.
+				</section>
+
+				<section data-markdown>
+				## What is Docker
+				- Docker Engine
+					- Run Docker Containers
+					- Build Docker Containers
+				- Docker Hub
+					- Store Docker Containers
+					- Share Docker Containers
+
+				</section>
+
+				<section>
+				<h3>Legos</h3>
+				<div>
+					<img src="images/simple_lego.jpg" style="height: 200px; width: 200px">
+					<img src="images/simple_lego_2.jpeg"  style="height: 200px; width: 200px">
+				</div>
+				<div>
+					<img class="fragment roll-in" src="images/simple_lego_3.jpg"  style="height: 200px; width: 200px">
+					<img class="fragment roll-in" src="images/simple_lego_4.jpg"  style="height: 200px; width: 200px">
+				</div>
+				</section>
+
+				<section data-markdown>
+				#### Docker File
+				```bash
+					FROM ubuntu:14.04
+					MAINTAINER Joseph Muraski
+
+					RUN apt-get update && \
+						apt-get install -y zsh && \
+						apt-get install -y git-core && \
+						apt-get install -y curl && \
+						apt-get install -y wget && \
+						rm -rf /var/lib/apt/lists/*
+
+					RUN chsh -s /bin/zsh
+					ENV HOME /root
+					WORKDIR /root
+					RUN git clone https://github.com/jmuraski/oh-my-zsh.git
+					RUN mv oh-my-zsh .oh-my-zsh
+					ADD profile.zshrc /root/.zshrc
+					CMD ["zsh"]
+				```
+				</section>
+
+				<section data-markdown>
+				### Main File Commands
+				- FROM
+				- MAINTAINER
+				- RUN
+				- EXPOSE
+				- ENV
+				- ADD/COPY
+				- ENTRYPOINT
+				- CMD
+				- VOLUME
+
+				[Docker File Reference](https://docs.docker.com/reference/builder/)
+
+				[Docker File Best Practices](https://docs.docker.com/articles/dockerfile_best-practices/)
+
+				[How to Optimize Your Dockerfile](http://blog.tutum.co/2014/10/22/how-to-optimize-your-dockerfile/)
+				</section>
+
+				<section data-markdown>
+				## Docker Registry (Hub)
+				- [Docker Hub](http://hub.docker.com)
+				- [Quay.io](http://quay.io)
+				- Public and private images
+				- Search for base images
+				- Automated buids
+				- Webhooks
+				</section>
+
+				<section data-markdown>
+				# Docker Demo
+				</section>
+
+				<section data-markdown>
+				## Core OS
+				>CoreOS is a powerful Linux distribution built to make large, scalable
+				>deployments on varied infrastructure simple to manage. Based on a build
+				>of Chrome OS, CoreOS maintains a lightweight host system and uses Docker
+				>containers for all applications. This system provides process isolation
+				>and also allows applications to be moved throughout a cluster easily.
+				</section>
+
+				<section data-markdown>
+				## CoreOS Components
+				- Run Docker
+				- etcd
+				- Fleet
+
+				</section>
+
+				<section data-markdown>
+				### etcd
+				>etcd is an distributed key value store that provides a reliable way to store
+				>data across a cluster of machines
+
+				- Similar to ZooKeeper, Consul
+				- Used for service discovery and config
+				- easily used from command line (curl, etcdctl)
+				</section>
+
+				<section>
+				<h2>CoreOS Cluster Architectures</h2>
+				<div><img src="images/small_coreos_cluster.png" style="height: 150px; width: auto;"></div>
+				<div><img src="images/large_cluster.png" style="height: 225px; width: auto;"></div>
+				<a href="https://coreos.com/docs/cluster-management/setup/cluster-architectures/" style="font-size: 24px">reference</a>
+				</section>
+
+				<section data-markdown>
+				## Fleet
+				>fleet ties together [systemd](https://coreos.com/using-coreos/systemd/) and etcd into a distributed init system.
+
+				- Deploy docker conatainers on arbitrary hosts
+				- Maintain N instances of service
+				- Automatically SSH into machine running service
+				- Automatically get logs of machine running service
+				</section>
+
+				<section data-markdown>
+				### Fleet File (Unit)
+
+				```bash
+				[Unit]
+				Description=Partner 1 Site Nginx Container
+				Requires=docker.service
+				After=docker.service
+				```
+				</section>
+
+				<section data-markdown>
+				### Fleet File (Service)
+
+				```bash
+				[Service]
+				TimeoutStartSec=0
+				KillMode=none
+				User=core
+				WorkingDirectory=/home/core
+				EnvironmentFile=/etc/environment
+				Restart=always
+				RestartSec=10s
+				StartLimitInterval=10
+				ExecStartPre=-/usr/bin/docker kill PARTNER_1_NGINX
+				ExecStartPre=-/usr/bin/docker rm PARTNER_1_NGINX
+				ExecStartPre=-/usr/bin/docker pull jmuraski/partner1-content
+				ExecStart=/usr/bin/docker run  --rm -p 48080:80 --name PARTNER_1_NGINX \
+					jmuraski/partner1-content
+				ExecStop=-/usr/bin/docker stop PARTNER_1_NGINX
+				```
+				</section>
+
+				<section data-markdown>
+				### Fleet File (X-Fleet)
+
+				```bash
+				[X-Fleet]
+				Conflicts=partner1Site@*.service
+				MachineMetadata=role=worker
+				```
+
+				- MachineID
+				- MachineOf
+				- MachineMetadata
+				- Conflicts
+				- Global
+				</section>
+
+				<section data-markdown>
+					## ssh-add
+
+					- SSH Agent forwarding is used for fleet
+					- ssh-add -ls (show current keys)
+					- ssh-add <key> (add key)
+					- ssh-add -h (help)
+					- ssh-add -D (delete all identities)
+				</section>
+
+				<section data-markdown>
+				## CoreOS Demo
+				</section>
+
+				<section data-markdown>
+				## Putting it All together
+
+				- Service Discovery
+				- Load Balancing
+				- Deployment
+				</section>
+
+				<section>
+				<h2>Legos?</h2>
+				<div>
+					<img src="images/complex_lego_1.png" style="height: 200px; width: auto;">
+					<img src="images/complex_lego_4.jpg" style="height: 200px; width: auto;">
+				</div>
+				<div>
+					<img class="fragment roll-in" src="images/complex_lego_2.jpg" style="height: 300px; width: auto;">
+					<img class="fragment roll-in" src="images/complex_lego_3.png" style="height: auto; width: 400px;">
+				</div>
+
+				</section>
+
+				<section data-markdown>
+				## Arch Drawing
+				</section>
+
+				<section data-markdown>
+				## api gatway pod
+				</section>
+
+				<section data-markdown>
+				## static content pod
+				</section>
+
+				<section data-markdown>
+				## service pod
+				</section>
+
+				<section data-markdown>
+				## api gateway pod
+				</section>
+
+				<section data-markdown>
+				## endpoint proxy pod
+				</section>
+
+				<section data-markdown>
+				## Full Deployment Demo
+				</section>
+
+				<section data-markdown>
+				## Whats missing
+				</section>
+
+				<section data-markdown>
+				## Can We get there
+				</section>
+
+				<section data-markdown>
+				## Issues
+				</section>
+
+				<section data-markdown>
+				## Repos and thank you
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
