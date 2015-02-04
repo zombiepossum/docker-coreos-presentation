@@ -79,12 +79,6 @@ app.get('/users', function(req, res){
   req.end();
 });
 
-app.get('/combined', function(req, res){
-  proxy.web(req,res, {
-    target: 'http://www.google.com'
-  });
-});
-
 app.get('/', function(req, res){
   res.json({msg: "hello world"});
 });

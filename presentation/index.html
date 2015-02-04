@@ -15,7 +15,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
 
 		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/blood.css" id="theme">
+		<link rel="stylesheet" href="css/theme/black.css" id="theme">
 
 		<!-- Code syntax highlighting -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
@@ -40,10 +40,38 @@
 
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
-				<section data-markdown>
-					## Microservices with Docker and CoreOS
+				<section>
+					<section data-markdown>
+						## Microservices with Docker and CoreOS
 
-					Created by Joe Muraski / [@jmuraski](http://twitter.com/jmuraski) / [My Profile](https://www.linkedin.com/in/jmuraski)
+						Created by Joe Muraski / [@jmuraski](http://twitter.com/jmuraski) / [My Profile](https://www.linkedin.com/in/jmuraski)
+					</section>
+					<section data-markdown>
+						## Microservices with Docker and CoreOS for Solutioning Synergies
+					</section>
+					<section>
+						<h1>BINGO</h1>
+						<table style="font-size: 30px;">
+							<tr>
+								<td style="border: 2px solid white;" >B</td><td style="border: 2px solid white;">I</td><td style="border: 2px solid white;">N</td><td style="border: 2px solid white;">G</td><td style="border: 2px solid white;">O</td>
+							</tr>
+							<tr>
+								<td style="border: 2px solid white; background: blue">Microservices</td><td style="border: 2px solid white;">Web 2.0</td><td style="border: 2px solid white;">Big Data</td><td style="border: 2px solid white;">NoSql</td><td style="border: 2px solid white;">SPA</td>
+							</tr>
+							<tr>
+								<td style="border: 2px solid white;">Cloud</td><td style="border: 2px solid white; background: blue">Docker</td><td style="border: 2px solid white;">Angular</td><td style="border: 2px solid white;">ReactJS</td><td style="border: 2px solid white;">Rabbit MQ</td>
+							</tr>
+							<tr>
+								<td style="border: 2px solid white;">AWS</td><td style="border: 2px solid white;">FRP</td><td style="border: 2px solid white; background: blue">Free Space</td><td style="border: 2px solid white;">Responsive</td><td style="border: 2px solid white;">Mobile First</td>
+							</tr>
+							<tr>
+								<td style="border: 2px solid white;">Kanban</td><td style="border: 2px solid white;">Dudes Law</td><td style="border: 2px solid white;">Gamification</td><td style="border: 2px solid white; background: blue">Solutioning</td><td style="border: 2px solid white;">Bit Coin</td>
+							</tr>
+							<tr>
+								<td style="border: 2px solid white;">REST</td><td style="border: 2px solid white;">Coffee Script</td><td style="border: 2px solid white;">Continuous Delivery</td><td style="border: 2px solid white;">NodeJS</td><td style="border: 2px solid white; background: blue">Synergies</td>
+							</tr>
+						</table>
+					</section>
 				</section>
 
 				<section>
@@ -57,7 +85,7 @@
 
 				<section>
 				<h2>What are Microservices</h2>
-				<blockquote style="font-size: 20px">
+				<blockquote style="font-size: 30px">
 				is an approach to developing a single application as a suite of small services,
 				each running in its own process and communicating with lightweight mechanisms,
 				often an HTTP resource API. These services are built around business capabilities
@@ -97,17 +125,6 @@
 				>assembled from components and eliminates the friction between development, QA, and production environments.
 				</section>
 
-				<section data-markdown>
-				## What is Docker
-				- Docker Engine
-					- Run Docker Containers
-					- Build Docker Containers
-				- Docker Hub
-					- Store Docker Containers
-					- Share Docker Containers
-
-				</section>
-
 				<section>
 				<h3>Legos</h3>
 				<div>
@@ -121,18 +138,36 @@
 				</section>
 
 				<section data-markdown>
+				## What is Docker
+				- Docker Engine
+					- Run Docker Containers
+					- Build Docker Containers
+				- Docker Hub
+					- Store Docker Containers
+					- Share Docker Containers
+
+				</section>
+
+				<section data-markdown>
+				## boot2Docker
+				Lightweight Unix environment for creating and running docker containers on MacOS
+
+				Requires Vagrant and Virtual Box
+
+				[http://viget.com/extend/how-to-use-docker-on-os-x-the-missing-guide](http://viget.com/extend/how-to-use-docker-on-os-x-the-missing-guide)
+				</section>
+
+				<section data-markdown>
 				#### Docker File
 				```bash
 					FROM ubuntu:14.04
 					MAINTAINER Joseph Muraski
-
 					RUN apt-get update && \
 						apt-get install -y zsh && \
 						apt-get install -y git-core && \
 						apt-get install -y curl && \
 						apt-get install -y wget && \
 						rm -rf /var/lib/apt/lists/*
-
 					RUN chsh -s /bin/zsh
 					ENV HOME /root
 					WORKDIR /root
@@ -168,7 +203,7 @@
 				- [Quay.io](http://quay.io)
 				- Public and private images
 				- Search for base images
-				- Automated buids
+				- Automated builds
 				- Webhooks
 				</section>
 
@@ -204,9 +239,15 @@
 				</section>
 
 				<section>
-				<h2>CoreOS Cluster Architectures</h2>
-				<div><img src="images/small_coreos_cluster.png" style="height: 150px; width: auto;"></div>
-				<div><img src="images/large_cluster.png" style="height: 225px; width: auto;"></div>
+				<h2>CoreOS Cluster Architectures (small)</h2>
+				Up to 9 Nodes
+				<div><img src="images/small_coreos_cluster.png" style="height: 350px; width: auto;"></div>
+				<a href="https://coreos.com/docs/cluster-management/setup/cluster-architectures/" style="font-size: 24px">reference</a>
+				</section>
+
+				<section>
+				<h2>CoreOS Cluster Architectures (large)</h2>
+				<div><img src="images/large_cluster.png" style="height: 400px; width: auto;"></div>
 				<a href="https://coreos.com/docs/cluster-management/setup/cluster-architectures/" style="font-size: 24px">reference</a>
 				</section>
 
@@ -221,6 +262,16 @@
 				</section>
 
 				<section data-markdown>
+					## ssh-add
+
+					- SSH Agent forwarding is used for fleet
+					- ssh-add -ls (show current keys)
+					- ssh-add <key> (add key)
+					- ssh-add -h (help)
+					- ssh-add -D (delete all identities)
+				</section>
+
+				<section data-markdown>
 				### Fleet File (Unit)
 
 				```bash
@@ -228,6 +279,7 @@
 				Description=Partner 1 Site Nginx Container
 				Requires=docker.service
 				After=docker.service
+				BindsTo=addressService@%i.service
 				```
 				</section>
 
@@ -267,16 +319,6 @@
 				- MachineMetadata
 				- Conflicts
 				- Global
-				</section>
-
-				<section data-markdown>
-					## ssh-add
-
-					- SSH Agent forwarding is used for fleet
-					- ssh-add -ls (show current keys)
-					- ssh-add <key> (add key)
-					- ssh-add -h (help)
-					- ssh-add -D (delete all identities)
 				</section>
 
 				<section data-markdown>
@@ -329,8 +371,22 @@
 				![Address Service Pod](images/address_service_pod.jpg)
 				</section>
 
-				<section data-markdown>
-				## Full Deployment Demo
+				<section>
+					<section data-markdown>## Full Deployment Demo</section>
+					<section>
+						<h2>I Submit the Pods</h2>
+						<img src="images/submit_files.jpg" style="height: 500px; widrth: auto;">
+					</section>
+					<section>
+						<h2>I load the Pods</h2>
+						<img src="images/load_files.jpg" style="height: 500px; widrth: auto;">
+					</section>
+					<section>
+						<h2>I Start the Pods</h2>
+						<img src="images/start_files.jpg" style="height: 500px; widrth: auto;">
+					</section>
+					<section data-markdown>![gru](images/gru.jpg)</section>
+					<section data-markdown>## Full Deployment Demo</section>
 				</section>
 
 				<section data-markdown>
@@ -354,6 +410,9 @@
 				## Issues
 				- Complexity
 				- Management
+				- Latency
+				- Log Management
+				- Tracing
 				- What else ??
 				</section>
 
@@ -393,6 +452,7 @@
 					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
 					{ src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
 					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/remotes/remotes.js', async: true },
 					{ src: 'plugin/notes/notes.js', async: true }
 				]
 			});
