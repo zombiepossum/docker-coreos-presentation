@@ -1,5 +1,5 @@
 #
-# example Dockerfile for http://docs.docker.io/en/latest/examples/postgresql_service/
+# Created from example Dockerfile for http://docs.docker.io/en/latest/examples/postgresql_service/
 #
 
 FROM ubuntu
